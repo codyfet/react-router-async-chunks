@@ -75,37 +75,70 @@ module.exports = {
 };
 ```
 
-### Пишем просто приложение с несколькими маршрутами
+### Пишем простое приложение с несколькими маршрутами
+Напишем несколько простых компонентов:
+
+Содержимое файла src/hello.component.js
+```
+import React from 'react';
+
+export const HelloComponent = (props) => {
+    return (
+        <span style={{ color: 'red' }}>Hello Component!</span>
+    );
+}
+```
+
+Содержимое файла src/contact.component.js
+```
+import React from 'react';
+
+import HelloComponent from './hello.component';
+
+export const ContactComponent = (props) => {
+    return (
+        <h1>Contact Component! <HelloComponent /></h1>
+    );
+}
+```
+
+Содержимое файла src/about.component.js
+```
+import React from 'react';
+
+import HelloComponent from './hello.component';
+
+export const AboutComponent = ( props ) => {
+    return (
+        <h1>About Component! <HelloComponent /></h1>
+    );
+}
+```
+
+Содержимое файла src/home.component.js
+```
+import React from 'react';
+
+import HelloComponent from './hello.component';
+
+export const HomeComponent = ( props ) => {
+    return (
+        <h1>Home Component! <HelloComponent /></h1>
+    );
+}
+```
+
 Поместим в файл src/index.jsx следующий код приложения с реализованным роутером:
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Switch, NavLink as Link, Route} from 'react-router-dom';
+import {ContactComponent} from './component.contact';
+import {AboutComponent} from './about.contact';
+import {HomeComponent} from './home.contact';
 
 import './styles.scss';
 
-// home route component
-const HomeComponent = ( props ) => {
-    return (
-        <h1>Home Component!</h1>
-    );
-}
-
-// about route component
-const AboutComponent = ( props ) => {
-    return (
-        <h1>About Component!</h1>
-    );
-}
-
-// contact route component
-const ContactComponent = ( props ) => {
-    return (
-        <h1>Contact Component!</h1>
-    );
-}
-
-// create sample App component
 class App extends React.Component {
     constructor( props ) {
         super( props );
@@ -122,9 +155,9 @@ class App extends React.Component {
                     </div>
                     
                     <Switch>
-                        <Route exact path="/" component={ HomeComponent } />
-                        <Route path="/about" component={ AboutComponent } />
-                        <Route path="/contact" component={ ContactComponent } />
+                        <Route exact path="/" component={HomeComponent} />
+                        <Route path="/about" component={AboutComponent} />
+                        <Route path="/contact" component={ContactComponent} />
                     </Switch>
                 </div>
             </BrowserRouter>
@@ -172,22 +205,6 @@ const HelloComponent = (props) => {
 }
 
 export default HelloComponent;
-```
-
-### Вынесем компонент ContactComponent в отдельный файл src/contact-component.js
-Добавим импорт HelloComponent.
-```
-import React from 'react';
-
-import HelloComponent from './hello.component';
-
-const ContactComponent = (props) => {
-    return (
-        <h1>Contact Component! <HelloComponent /></h1>
-    );
-}
-
-export default ContactComponent;
 ```
 
 ### Добавляем асинхронную подгрузку компонента
