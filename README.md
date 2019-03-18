@@ -36,7 +36,7 @@ html, body {
 }
 ```
 
-Добавить поддержку работы с sass в webpack.config.js. На текущий моент он может выглядеть так:
+Добавить поддержку работы с sass в webpack.config.js. На текущий момент он может выглядеть так:
 ```
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -46,7 +46,7 @@ var htmlPlugin = new HtmlWebpackPlugin({
 });
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
         path: __dirname + '/dist',
         filename: 'main.js'
@@ -54,7 +54,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js)$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: ['babel-loader']
             }, 
@@ -69,7 +69,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.js', '.css', '.scss']
+        extensions: ['.js', '.jsx', '.css', '.less']
     },
     plugins: [htmlPlugin]
 };
