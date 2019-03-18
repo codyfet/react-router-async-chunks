@@ -1,16 +1,16 @@
 # react-router-async-chunks
 Пример настройки webpack 4 для lazy-подгрузки модулей react-приложения, осуществляемой после перехода пользователя на определённый маршрут (react-router 4).
 
-### Простое приложение на react
-Базовая настройка и написание простого приложения на реакт подробно описана в проекте [react-workspace](https://github.com/codyfet/react-workspace). Проделайте шаги, описанные в руководстве по ссылке, либо склонируйте проект.
+## Простое приложение на react
+Базовая настройка и написание простого приложения на реакт подробно описана в проекте [react-workspace](https://github.com/codyfet/react-workspace). Проделайте шаги, описанные в руководстве по ссылке, либо склонируйте проект. ПШаги, описанные ниже, предполагают наличие развёрнутого абочего проекта.
 
-### Устанавливаем react-router
+## Устанавливаем react-router
 Установить пакет react-router-dom
 ```
 npm install --save react-router-dom
 ```
 
-### Настраиваем работу с sass
+## Настраиваем работу с sass
 Установить sass и лоадер для webpack для работы с sass. Кроме того, необходимо установить node-sass
 ```
 npm install --save-dev sass node-sass sass-loader
@@ -28,7 +28,7 @@ html, body {
             margin: 0 10px;
             text-decoration: none;
 
-            &.active{
+            &.active {
                 text-decoration: underline;
             }
         }
@@ -36,7 +36,7 @@ html, body {
 }
 ```
 
-Добавить поддержку работы с sass в webpack.config.js. На текущий моент он должен выглядеть так:
+Добавить поддержку работы с sass в webpack.config.js. На текущий моент он может выглядеть так:
 ```
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -75,57 +75,63 @@ module.exports = {
 };
 ```
 
-### Пишем простое приложение с несколькими маршрутами
+## Пишем простое приложение с несколькими маршрутами
 Напишем несколько простых компонентов:
 
-Содержимое файла src/hello.component.js
+Содержимое файла src/hello.component.jsx
 ```
 import React from 'react';
 
-export const HelloComponent = (props) => {
+export const HelloComponent = () => {
     return (
-        <span style={{ color: 'red' }}>Hello Component!</span>
+        <span style={{color: 'red'}}>Hello Component!</span>
     );
 }
 ```
 
-Содержимое файла src/contact.component.js
+Содержимое файла src/contact.component.jsx
 ```
 import React from 'react';
 
-import HelloComponent from './hello.component';
+import {HelloComponent} from './hello.component';
 
-export const ContactComponent = (props) => {
+const ContactComponent = () => {
     return (
         <h1>Contact Component! <HelloComponent /></h1>
     );
 }
+
+export default ContactComponent;
 ```
 
-Содержимое файла src/about.component.js
+Содержимое файла src/about.component.jsx
 ```
 import React from 'react';
 
-import HelloComponent from './hello.component';
+import {HelloComponent} from './hello.component';
 
-export const AboutComponent = ( props ) => {
+const AboutComponent = () => {
     return (
         <h1>About Component! <HelloComponent /></h1>
     );
 }
+
+export default AboutComponent;
 ```
 
-Содержимое файла src/home.component.js
+Содержимое файла src/home.component.jsx
 ```
 import React from 'react';
 
-import HelloComponent from './hello.component';
+import {HelloComponent} from './hello.component';
 
-export const HomeComponent = ( props ) => {
+const HomeComponent = () => {
     return (
         <h1>Home Component! <HelloComponent /></h1>
     );
 }
+
+export default HomeComponent;
 ```
 
 Поместим в файл src/index.jsx следующий код приложения с реализованным роутером:
@@ -133,17 +139,13 @@ export const HomeComponent = ( props ) => {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Switch, NavLink as Link, Route} from 'react-router-dom';
-import {ContactComponent} from './component.contact';
-import {AboutComponent} from './about.contact';
-import {HomeComponent} from './home.contact';
+import {ContactComponent} from './contact.component';
+import {AboutComponent} from './about.component';
+import {HomeComponent} from './home.component';
 
 import './styles.scss';
 
 class App extends React.Component {
-    constructor( props ) {
-        super( props );
-    }
-
     render() {
         return(
             <BrowserRouter>
@@ -168,7 +170,7 @@ class App extends React.Component {
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
-### Устанавливаем плагин syntax-dynamic-import для babel
+## Устанавливаем плагин syntax-dynamic-import для babel
 Для корректной работы функции import в webpack (используется для реализации асинхронной подгрузки модулей) необходимо установить плагин для бабеля:
 ```
 npm install --save-dev babel-plugin-syntax-dynamic-import
@@ -187,47 +189,83 @@ npm install --save-dev babel-plugin-syntax-dynamic-import
 }
 ```
 
-### Устанавливаем пакет react-loadable
+## Устанавливаем пакет react-loadable
 Данный пакет необходим для реализации асинхронной подгрузки react компонентов приложения.
 ```
 npm install --save react-loadable
 ```
 
-### Напишем простой компонент, который будет использоваться на всех страницах
-Создадим файл src/hello.component.js
+## Добавляем асинхронную подгрузку компонента
+Добавим компонент-спиннер. Внесём изменения в код роутера в файле src/index.
 ```
 import React from 'react';
-
-const HelloComponent = (props) => {
-    return (
-        <span style={{color: 'red'}}>Hello Component!</span>
-    );
-}
-
-export default HelloComponent;
-```
-
-### Добавляем асинхронную подгрузку компонента
-Добавим компонент-спиннер. Внесём изменения в код роутера в файле src/index:
-```
+import ReactDOM from 'react-dom';
+import {BrowserRouter, Switch, NavLink as Link, Route} from 'react-router-dom';
 import loadable from 'react-loadable';
-...
+
+import AboutComponent from './about.component';
+import HomeComponent from './home.component';
+
+import './styles.scss';
+
+/**
+ * Компонент-спиннер.
+ */
 const LoadingComponent = () => <h3>please wait...</h3>;
-...
+
+/**
+ * Loadable-обёртка для ContactComponent, которая подгрузит наш компонент асинхронно.
+ * Важно отметить, что подгружаемый асинхронно компонент должен экспортироваться из модуля как дефолтный.
+ */
 const AsyncContactComponent = loadable({
     loader: () => import('./contact.component'),
     loading: LoadingComponent
 });
-...
-<Switch>
-    <Route exact path="/" component={HomeComponent} />
-    <Route path="/about" component={AboutComponent} />
-    <Route path="/contact" render={ 
-        (props) => <AsyncContactComponent {...props} value="1" />
-    } />
-</Switch>
-...
+
+class App extends React.Component {
+    render() {
+        return (
+            <BrowserRouter>
+                <div>
+                    <div className="menu">
+                        <Link exact to="/" activeClassName="active">Home</Link>
+                        <Link to="/about" activeClassName="active">About</Link>
+                        <Link to="/contact" activeClassName="active">Contact</Link>
+                    </div>
+
+                    <Switch>
+                        <Route exact path="/" component={HomeComponent} />
+                        <Route path="/about" component={AboutComponent} />
+                        <Route path="/contact" render={(props) => <AsyncContactComponent {...props} value="1" />} />
+                    </Switch>
+                </div>
+            </BrowserRouter>
+        );
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
-refereneces:
+Далее напишем Loadable-обёртки для всех трёх страниц нашего приложения (при этом важно удалить ненужные больше импорты компонентов и index.jsx):
+```
+const AsyncHomeComponent = loadable({
+    loader: () => import('./home.component'),
+    loading: LoadingComponent
+});
+
+const AsyncAboutComponent = loadable({
+    loader: () => import('./about.component'),
+    loading: LoadingComponent
+});
+...
+<Switch>
+    <Route exact path="/" render={(props) => <AsyncHomeComponent {...props} value="1" />} />
+    <Route path="/about" render={(props) => <AsyncAboutComponent {...props} value="2" />} />
+    <Route path="/contact" render={(props) => <AsyncContactComponent {...props} value="3" />} />
+</Switch>
+```
+
+
+references:
 https://itnext.io/react-router-and-webpack-v4-code-splitting-using-splitchunksplugin-f0a48f110312
