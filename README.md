@@ -254,5 +254,75 @@ class App extends React.Component {
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
+### Настраиваем vendor chunk
+Добавить в webpack.config.js в раздел output указание как будет формаировать имя чанка:
+```
+    output: {
+        path: __dirname + '/dist',
+        filename: 'main.js',
+        chunkFilename: '[name].js'
+    },
+```
+И добавить раздел optimization:
+```
+optimization: {
+    splitChunks: {
+        cacheGroups: {
+            /**
+             * Отключим дефолтные настройки.
+             */
+            default: false,
+            vendors: false,
+            /**
+             * Настраиваем вендор чанк.
+             */
+            vendor: {
+                // Имя вендор чанка.
+                name: 'vendor',
+                // Включить в вендор чанк синхронные и асинхронные модули.
+                chunks: 'all',
+                // Включить в вендор чанк модули из node_modules.
+                test: /node_modules/
+            }
+        }
+    }
+},
+```
+
+### Устанавливаем и подключаем плагин webpack-async-chunk-names-plugin
+Для того, чтобы асинхронные чанки имели осмысленные имена, необходимо установить плагин для вебпака:
+```
+npm install --save-dev webpack-async-chunk-names-plugin
+```
+
+Далее в webpack.config.js подключаем его, создаём экземпляр и добавляем экземпляр в массив plugins.
+```
+var AsyncChunkNames = require('webpack-async-chunk-names-plugin');
+
+var asyncChunkNames = new AsyncChunkNames();
+...
+    plugins: [htmlPlugin, asyncChunkNames]
+```
+
+### Выносим общий для асинхронных модулей код в отдельный common чанк
+В нашем примере все асинхронные модули используют модуль HelloComponent. Вынесем его в common chunk. Добавим в файле webpack.config.js раздел optimization.splitChunks.cacheGroups.common
+```
+common: {
+    name: 'common',
+    minChunks: 2,
+    chunks: 'async',
+    priority: 10,
+    reuseExistingChunk: true,
+    enforce: true
+}
+```
+
+Теперь наше приложение содержит:
+
+1 bundle - main.js
+1 sync-chunk - vendor.js
+3 async-chunk - route component files
+
+
 ссылки:
 https://itnext.io/react-router-and-webpack-v4-code-splitting-using-splitchunksplugin-f0a48f110312
