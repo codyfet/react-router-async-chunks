@@ -203,9 +203,6 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Switch, NavLink as Link, Route} from 'react-router-dom';
 import loadable from 'react-loadable';
 
-import AboutComponent from './about.component';
-import HomeComponent from './home.component';
-
 import './styles.scss';
 
 /**
@@ -214,9 +211,19 @@ import './styles.scss';
 const LoadingComponent = () => <h3>please wait...</h3>;
 
 /**
- * Loadable-обёртка для ContactComponent, которая подгрузит наш компонент асинхронно.
+ * Loadable-обёртка для компонента, которая подгрузит компонент асинхронно.
  * Важно отметить, что подгружаемый асинхронно компонент должен экспортироваться из модуля как дефолтный.
  */
+const AsyncHomeComponent = loadable({
+    loader: () => import('./home.component'),
+    loading: LoadingComponent
+});
+
+const AsyncAboutComponent = loadable({
+    loader: () => import('./about.component'),
+    loading: LoadingComponent
+});
+
 const AsyncContactComponent = loadable({
     loader: () => import('./contact.component'),
     loading: LoadingComponent
@@ -234,9 +241,9 @@ class App extends React.Component {
                     </div>
 
                     <Switch>
-                        <Route exact path="/" component={HomeComponent} />
-                        <Route path="/about" component={AboutComponent} />
-                        <Route path="/contact" render={(props) => <AsyncContactComponent {...props} value="1" />} />
+                        <Route exact path="/" render={(props) => <AsyncHomeComponent {...props} value="1" />} />
+                        <Route path="/about" render={(props) => <AsyncAboutComponent {...props} value="2" />} />
+                        <Route path="/contact" render={(props) => <AsyncContactComponent {...props} value="3" />} />
                     </Switch>
                 </div>
             </BrowserRouter>
@@ -247,25 +254,5 @@ class App extends React.Component {
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
-Далее напишем Loadable-обёртки для всех трёх страниц нашего приложения (при этом важно удалить ненужные больше импорты компонентов и index.jsx):
-```
-const AsyncHomeComponent = loadable({
-    loader: () => import('./home.component'),
-    loading: LoadingComponent
-});
-
-const AsyncAboutComponent = loadable({
-    loader: () => import('./about.component'),
-    loading: LoadingComponent
-});
-...
-<Switch>
-    <Route exact path="/" render={(props) => <AsyncHomeComponent {...props} value="1" />} />
-    <Route path="/about" render={(props) => <AsyncAboutComponent {...props} value="2" />} />
-    <Route path="/contact" render={(props) => <AsyncContactComponent {...props} value="3" />} />
-</Switch>
-```
-
-
-references:
+ссылки:
 https://itnext.io/react-router-and-webpack-v4-code-splitting-using-splitchunksplugin-f0a48f110312
