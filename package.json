@@ -1,0 +1,45 @@
+{
+  "name": "react-router-async-chunks",
+  "version": "1.0.0",
+  "description": "Пример асинхронной подгрузки модулей в react прилоении с роутером.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open --hot",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codyfet/react-router-async-chunks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codyfet/react-router-async-chunks/issues"
+  },
+  "homepage": "https://github.com/codyfet/react-router-async-chunks#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.0.1",
+    "less-loader": "^4.1.0",
+    "node-sass": "^4.11.0",
+    "sass": "^1.17.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3"
+  },
+  "dependencies": {
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-loadable": "^5.5.0",
+    "react-router-dom": "^4.4.0"
+  }
+}
