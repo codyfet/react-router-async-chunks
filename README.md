@@ -2,7 +2,7 @@
 Пример настройки webpack 4 для lazy-подгрузки модулей react-приложения, осуществляемой после перехода пользователя на определённый маршрут (react-router 4).
 
 ## Простое приложение на react
-Базовая настройка и написание простого приложения на реакт подробно описана в проекте [react-workspace](https://github.com/codyfet/react-workspace). Проделайте шаги, описанные в руководстве по ссылке, либо склонируйте проект. ПШаги, описанные ниже, предполагают наличие развёрнутого абочего проекта.
+Базовая настройка и написание простого приложения на реакт подробно описана в проекте [react-workspace](https://github.com/codyfet/react-workspace). Проделайте шаги, описанные в руководстве по ссылке, либо склонируйте проект. Шаги, описанные ниже, предполагают наличие развёрнутого рабочего проекта.
 
 ## Устанавливаем react-router
 Установить пакет react-router-dom
@@ -320,9 +320,13 @@ common: {
 Теперь наше приложение содержит:
 
 1 bundle - main.js
+
 1 sync-chunk - vendor.js
+
 3 async-chunk - route component files
 
 
 ссылки:
+
 https://itnext.io/react-router-and-webpack-v4-code-splitting-using-splitchunksplugin-f0a48f110312
+https://hackernoon.com/the-100-correct-way-to-split-your-chunks-with-webpack-f8a9df5b7758
