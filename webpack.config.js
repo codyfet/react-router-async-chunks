@@ -13,7 +13,8 @@ module.exports = {
     output: {
         path: __dirname + '/dist',
         filename: 'main.js',
-        chunkFilename: '[name].js'
+        chunkFilename: '[name].js',
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -64,6 +65,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.jsx', '.css', '.scss']
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     plugins: [htmlPlugin, asyncChunkNames]
 };

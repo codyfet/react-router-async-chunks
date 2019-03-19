@@ -196,7 +196,7 @@ npm install --save react-loadable
 ```
 
 ## Добавляем асинхронную подгрузку компонента
-Добавим компонент-спиннер. Внесём изменения в код роутера в файле src/index.
+Добавим компонент-спиннер. Внесём изменения в код роутера в файле src/index.jsx.
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -255,7 +255,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
 ### Настраиваем vendor chunk
-Добавить в webpack.config.js в раздел output указание как будет формаировать имя чанка:
+Добавить в webpack.config.js в раздел output указание как будет формироваться имя чанка:
 ```
     output: {
         path: __dirname + '/dist',
